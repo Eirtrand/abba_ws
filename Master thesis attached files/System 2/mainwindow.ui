@@ -1,0 +1,2016 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1463</width>
+    <height>400</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>1300</width>
+    <height>400</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>5</x>
+      <y>100</y>
+      <width>111</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="segmented_image_label">
+    <property name="geometry">
+     <rect>
+      <x>100</x>
+      <y>100</y>
+      <width>211</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QGroupBox" name="Segmentation_groupBox">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>50</y>
+      <width>771</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Segmentation methods</string>
+    </property>
+    <widget class="QWidget" name="layoutWidget">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>20</y>
+       <width>752</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QRadioButton" name="No_Segmentation_Mode">
+        <property name="text">
+         <string>No Mode</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="Sobel">
+        <property name="text">
+         <string>Sobel</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="Scharr">
+        <property name="text">
+         <string>Scharr</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="Otsu">
+        <property name="text">
+         <string>Otsu's method</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="Thresholding">
+        <property name="text">
+         <string>Naive thresholding</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="Adaptive_Thresholding">
+        <property name="text">
+         <string>Adaptive thresholding</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="Laplacian">
+        <property name="text">
+         <string>Laplacian</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="Inversion_checkbox">
+        <property name="text">
+         <string>Invert Segmented image</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="Modes_groupbox">
+    <property name="geometry">
+     <rect>
+      <x>840</x>
+      <y>0</y>
+      <width>285</width>
+      <height>45</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Mode</string>
+    </property>
+    <widget class="QWidget" name="layoutWidget">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>20</y>
+       <width>279</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout_9">
+      <item>
+       <widget class="QRadioButton" name="No_Mode">
+        <property name="text">
+         <string>No Mode</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="Hole_Detection">
+        <property name="text">
+         <string>Hole Detection</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="Growth_detection">
+        <property name="text">
+         <string>Growth Detection</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="Color_spaces_groupBox">
+    <property name="geometry">
+     <rect>
+      <x>210</x>
+      <y>0</y>
+      <width>629</width>
+      <height>45</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Color Spaces</string>
+    </property>
+    <widget class="QWidget" name="layoutWidget">
+     <property name="geometry">
+      <rect>
+       <x>4</x>
+       <y>20</y>
+       <width>618</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout_6">
+      <item>
+       <widget class="QRadioButton" name="No_Color_Mode">
+        <property name="text">
+         <string>No Mode</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="x">
+        <property name="text">
+         <string>x</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="y">
+        <property name="text">
+         <string>y</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="Y">
+        <property name="text">
+         <string>Y</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="Red">
+        <property name="text">
+         <string>Red</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="Green">
+        <property name="text">
+         <string>Green</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="Blue">
+        <property name="text">
+         <string>Blue</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="x2">
+        <property name="text">
+         <string>x2</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="y2">
+        <property name="text">
+         <string>y2</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="Y2">
+        <property name="text">
+         <string>Y2</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="Lab">
+        <property name="text">
+         <string>L*a*b*</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="L">
+        <property name="text">
+         <string>L</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="a">
+        <property name="text">
+         <string>a</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="b">
+        <property name="text">
+         <string>b</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="Bottom_line_box">
+    <property name="geometry">
+     <rect>
+      <x>5</x>
+      <y>200</y>
+      <width>1271</width>
+      <height>121</height>
+     </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>1200</width>
+      <height>121</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>1500</width>
+      <height>121</height>
+     </size>
+    </property>
+    <property name="title">
+     <string/>
+    </property>
+    <widget class="QPushButton" name="Capture">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>20</y>
+       <width>109</width>
+       <height>25</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Capture</string>
+     </property>
+    </widget>
+    <widget class="QGroupBox" name="time_spent_box">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>50</y>
+       <width>145</width>
+       <height>69</height>
+      </rect>
+     </property>
+     <property name="title">
+      <string>Total time spent per image</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+     <widget class="QPlainTextEdit" name="Total_time_spent">
+      <property name="geometry">
+       <rect>
+        <x>4</x>
+        <y>12</y>
+        <width>137</width>
+        <height>53</height>
+       </rect>
+      </property>
+      <property name="verticalScrollBarPolicy">
+       <enum>Qt::ScrollBarAlwaysOff</enum>
+      </property>
+      <property name="horizontalScrollBarPolicy">
+       <enum>Qt::ScrollBarAlwaysOff</enum>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QGroupBox" name="Segmentation_enhancing_groupBox">
+     <property name="geometry">
+      <rect>
+       <x>900</x>
+       <y>20</y>
+       <width>341</width>
+       <height>97</height>
+      </rect>
+     </property>
+     <property name="title">
+      <string>Segmentation enhancement</string>
+     </property>
+     <widget class="QCheckBox" name="Dilation_checkBox">
+      <property name="geometry">
+       <rect>
+        <x>48</x>
+        <y>20</y>
+        <width>57</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Dilation</string>
+      </property>
+      <property name="checked">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QCheckBox" name="Gaussian_checkBox">
+      <property name="geometry">
+       <rect>
+        <x>192</x>
+        <y>20</y>
+        <width>117</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Gaussian Smoothing</string>
+      </property>
+     </widget>
+     <widget class="QGroupBox" name="Dilation_groupBox">
+      <property name="geometry">
+       <rect>
+        <x>4</x>
+        <y>40</y>
+        <width>150</width>
+        <height>40</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>Number of rounds</string>
+      </property>
+      <widget class="QWidget" name="layoutWidget">
+       <property name="geometry">
+        <rect>
+         <x>4</x>
+         <y>12</y>
+         <width>141</width>
+         <height>25</height>
+        </rect>
+       </property>
+       <layout class="QHBoxLayout" name="horizontalLayout_12">
+        <item>
+         <widget class="QSlider" name="Dilation_horizontalSlider">
+          <property name="minimum">
+           <number>1</number>
+          </property>
+          <property name="maximum">
+           <number>10</number>
+          </property>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLCDNumber" name="Dilation_lcdNumber">
+          <property name="intValue" stdset="0">
+           <number>1</number>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+     <widget class="QGroupBox" name="Gaussian_smoothing_groupBox">
+      <property name="geometry">
+       <rect>
+        <x>180</x>
+        <y>40</y>
+        <width>150</width>
+        <height>40</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>Kernel size</string>
+      </property>
+      <widget class="QWidget" name="layoutWidget_8">
+       <property name="geometry">
+        <rect>
+         <x>4</x>
+         <y>12</y>
+         <width>141</width>
+         <height>25</height>
+        </rect>
+       </property>
+       <layout class="QHBoxLayout" name="horizontalLayout_15">
+        <item>
+         <widget class="QSlider" name="Gaussian_horizontalSlider">
+          <property name="minimum">
+           <number>1</number>
+          </property>
+          <property name="maximum">
+           <number>25</number>
+          </property>
+          <property name="singleStep">
+           <number>2</number>
+          </property>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLCDNumber" name="Gaussian_lcdNumber">
+          <property name="intValue" stdset="0">
+           <number>1</number>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </widget>
+    <widget class="QGroupBox" name="Thresholding_box">
+     <property name="geometry">
+      <rect>
+       <x>300</x>
+       <y>20</y>
+       <width>380</width>
+       <height>100</height>
+      </rect>
+     </property>
+     <property name="title">
+      <string>Thresholding</string>
+     </property>
+     <widget class="QGroupBox" name="Glocal_Scharr_Histogram_2">
+      <property name="geometry">
+       <rect>
+        <x>200</x>
+        <y>30</y>
+        <width>170</width>
+        <height>45</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>Threshold</string>
+      </property>
+      <widget class="QWidget" name="layoutWidget_5">
+       <property name="geometry">
+        <rect>
+         <x>4</x>
+         <y>12</y>
+         <width>156</width>
+         <height>25</height>
+        </rect>
+       </property>
+       <layout class="QHBoxLayout" name="horizontalLayout_11">
+        <item>
+         <widget class="QSlider" name="Threshold_slider">
+          <property name="minimum">
+           <number>1</number>
+          </property>
+          <property name="maximum">
+           <number>255</number>
+          </property>
+          <property name="sliderPosition">
+           <number>90</number>
+          </property>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLCDNumber" name="Threshold_lcdNumber_2">
+          <property name="intValue" stdset="0">
+           <number>90</number>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </widget>
+    <widget class="QGroupBox" name="Adaptive_Thresholding_box">
+     <property name="geometry">
+      <rect>
+       <x>300</x>
+       <y>20</y>
+       <width>380</width>
+       <height>100</height>
+      </rect>
+     </property>
+     <property name="title">
+      <string>Adaptive Thresholding</string>
+     </property>
+     <widget class="QGroupBox" name="groupBox">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>20</y>
+        <width>113</width>
+        <height>73</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>Thresholding method</string>
+      </property>
+      <widget class="QWidget" name="layoutWidget">
+       <property name="geometry">
+        <rect>
+         <x>5</x>
+         <y>13</y>
+         <width>68</width>
+         <height>42</height>
+        </rect>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout">
+        <item>
+         <widget class="QRadioButton" name="Adaptive_Thresholding_gaussian_radioButton">
+          <property name="text">
+           <string>Gaussian</string>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QRadioButton" name="Adaptive_thresholding_mean_radioButton">
+          <property name="text">
+           <string>Mean</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+     <widget class="QGroupBox" name="Adaptive_Thresholding_Kernel_box">
+      <property name="geometry">
+       <rect>
+        <x>124</x>
+        <y>8</y>
+        <width>173</width>
+        <height>45</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>Kernel size</string>
+      </property>
+      <widget class="QSlider" name="Adaptive_Thresholding_kernel_slider">
+       <property name="geometry">
+        <rect>
+         <x>4</x>
+         <y>16</y>
+         <width>84</width>
+         <height>19</height>
+        </rect>
+       </property>
+       <property name="minimum">
+        <number>3</number>
+       </property>
+       <property name="maximum">
+        <number>15</number>
+       </property>
+       <property name="singleStep">
+        <number>2</number>
+       </property>
+       <property name="value">
+        <number>3</number>
+       </property>
+       <property name="sliderPosition">
+        <number>3</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+      <widget class="QLCDNumber" name="Adaptive_Thresholding_kernel_lcdNumber">
+       <property name="geometry">
+        <rect>
+         <x>100</x>
+         <y>16</y>
+         <width>64</width>
+         <height>23</height>
+        </rect>
+       </property>
+       <property name="intValue" stdset="0">
+        <number>3</number>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QGroupBox" name="Adaptive_Thresholding_C_box">
+      <property name="geometry">
+       <rect>
+        <x>124</x>
+        <y>52</y>
+        <width>173</width>
+        <height>45</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>C</string>
+      </property>
+      <widget class="QSlider" name="Adaptive_Thresholding_C_slider">
+       <property name="geometry">
+        <rect>
+         <x>4</x>
+         <y>16</y>
+         <width>84</width>
+         <height>19</height>
+        </rect>
+       </property>
+       <property name="minimum">
+        <number>0</number>
+       </property>
+       <property name="maximum">
+        <number>25</number>
+       </property>
+       <property name="singleStep">
+        <number>2</number>
+       </property>
+       <property name="value">
+        <number>0</number>
+       </property>
+       <property name="sliderPosition">
+        <number>0</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+      <widget class="QLCDNumber" name="Adaptive_Thresholding_C_lcdNumber">
+       <property name="geometry">
+        <rect>
+         <x>100</x>
+         <y>16</y>
+         <width>64</width>
+         <height>23</height>
+        </rect>
+       </property>
+       <property name="intValue" stdset="0">
+        <number>0</number>
+       </property>
+      </widget>
+     </widget>
+    </widget>
+    <widget class="QGroupBox" name="Local_Otsu_box">
+     <property name="geometry">
+      <rect>
+       <x>300</x>
+       <y>20</y>
+       <width>380</width>
+       <height>100</height>
+      </rect>
+     </property>
+     <property name="title">
+      <string>Local Otsu</string>
+     </property>
+     <widget class="QWidget" name="layoutWidget">
+      <property name="geometry">
+       <rect>
+        <x>8</x>
+        <y>48</y>
+        <width>156</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <item>
+        <widget class="QSlider" name="Local_Otsu_horizontalSlider">
+         <property name="minimum">
+          <number>1</number>
+         </property>
+         <property name="maximum">
+          <number>60</number>
+         </property>
+         <property name="value">
+          <number>5</number>
+         </property>
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLCDNumber" name="Local_Otsu_lcdNumber">
+         <property name="intValue" stdset="0">
+          <number>25</number>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+    <widget class="QGroupBox" name="Sobel_box">
+     <property name="geometry">
+      <rect>
+       <x>180</x>
+       <y>20</y>
+       <width>693</width>
+       <height>100</height>
+      </rect>
+     </property>
+     <property name="title">
+      <string>Local Sobel</string>
+     </property>
+     <widget class="QGroupBox" name="Local_Sobel_sub_images_groupBox">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>30</y>
+        <width>170</width>
+        <height>45</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>Number of sub-images</string>
+      </property>
+      <widget class="QWidget" name="layoutWidget">
+       <property name="geometry">
+        <rect>
+         <x>4</x>
+         <y>12</y>
+         <width>156</width>
+         <height>25</height>
+        </rect>
+       </property>
+       <layout class="QHBoxLayout" name="horizontalLayout_3">
+        <item>
+         <widget class="QSlider" name="Local_Sobel_horizontalSlider">
+          <property name="minimum">
+           <number>1</number>
+          </property>
+          <property name="maximum">
+           <number>40</number>
+          </property>
+          <property name="value">
+           <number>1</number>
+          </property>
+          <property name="sliderPosition">
+           <number>1</number>
+          </property>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLCDNumber" name="Local_Sobel_lcdNumber">
+          <property name="intValue" stdset="0">
+           <number>1</number>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+     <widget class="QGroupBox" name="Local_Sobel_Histogram">
+      <property name="geometry">
+       <rect>
+        <x>344</x>
+        <y>16</y>
+        <width>170</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>Histogram percentile</string>
+      </property>
+      <widget class="QWidget" name="layoutWidget_4">
+       <property name="geometry">
+        <rect>
+         <x>4</x>
+         <y>12</y>
+         <width>156</width>
+         <height>25</height>
+        </rect>
+       </property>
+       <layout class="QHBoxLayout" name="horizontalLayout_8">
+        <item>
+         <widget class="QSlider" name="Local_Sobel_histogram_slider">
+          <property name="minimum">
+           <number>40</number>
+          </property>
+          <property name="maximum">
+           <number>99</number>
+          </property>
+          <property name="sliderPosition">
+           <number>70</number>
+          </property>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLCDNumber" name="Local_Sobel_histogram_lcdNumber">
+          <property name="intValue" stdset="0">
+           <number>70</number>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+     <widget class="QGroupBox" name="Local_Sobel_dx_groupBox">
+      <property name="geometry">
+       <rect>
+        <x>172</x>
+        <y>16</y>
+        <width>169</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>dx</string>
+      </property>
+      <widget class="QWidget" name="layoutWidget_15">
+       <property name="geometry">
+        <rect>
+         <x>4</x>
+         <y>12</y>
+         <width>156</width>
+         <height>25</height>
+        </rect>
+       </property>
+       <layout class="QHBoxLayout" name="horizontalLayout_22">
+        <item>
+         <widget class="QSlider" name="Local_Sobel_dx_slider">
+          <property name="minimum">
+           <number>0</number>
+          </property>
+          <property name="maximum">
+           <number>6</number>
+          </property>
+          <property name="value">
+           <number>1</number>
+          </property>
+          <property name="sliderPosition">
+           <number>1</number>
+          </property>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLCDNumber" name="Local_Sobel_dx_lcdNumber">
+          <property name="intValue" stdset="0">
+           <number>1</number>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+     <widget class="QGroupBox" name="Local_Sobel_dy_groupBox">
+      <property name="geometry">
+       <rect>
+        <x>172</x>
+        <y>56</y>
+        <width>169</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>dy</string>
+      </property>
+      <widget class="QWidget" name="layoutWidget_17">
+       <property name="geometry">
+        <rect>
+         <x>4</x>
+         <y>12</y>
+         <width>156</width>
+         <height>25</height>
+        </rect>
+       </property>
+       <layout class="QHBoxLayout" name="horizontalLayout_24">
+        <item>
+         <widget class="QSlider" name="Local_Sobel_dy_slider">
+          <property name="minimum">
+           <number>0</number>
+          </property>
+          <property name="maximum">
+           <number>6</number>
+          </property>
+          <property name="value">
+           <number>1</number>
+          </property>
+          <property name="sliderPosition">
+           <number>1</number>
+          </property>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLCDNumber" name="Local_Sobel_dy_lcdNumber">
+          <property name="intValue" stdset="0">
+           <number>1</number>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+     <widget class="QGroupBox" name="Local_Sobel_Kernel_size_box">
+      <property name="geometry">
+       <rect>
+        <x>344</x>
+        <y>56</y>
+        <width>170</width>
+        <height>37</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>Kernel Size</string>
+      </property>
+      <widget class="QWidget" name="layoutWidget_16">
+       <property name="geometry">
+        <rect>
+         <x>4</x>
+         <y>12</y>
+         <width>156</width>
+         <height>25</height>
+        </rect>
+       </property>
+       <layout class="QHBoxLayout" name="horizontalLayout_23">
+        <item>
+         <widget class="QSlider" name="Local_Sobel_kernel_slider">
+          <property name="minimum">
+           <number>1</number>
+          </property>
+          <property name="maximum">
+           <number>7</number>
+          </property>
+          <property name="sliderPosition">
+           <number>3</number>
+          </property>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLCDNumber" name="Local_Sobel_kernel_lcdNumber">
+          <property name="intValue" stdset="0">
+           <number>3</number>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+     <widget class="QGroupBox" name="Sobel_weight_dy_groupBox">
+      <property name="geometry">
+       <rect>
+        <x>516</x>
+        <y>56</y>
+        <width>170</width>
+        <height>45</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>Weighting of dy</string>
+      </property>
+      <widget class="QWidget" name="layoutWidget_9">
+       <property name="geometry">
+        <rect>
+         <x>8</x>
+         <y>16</y>
+         <width>156</width>
+         <height>25</height>
+        </rect>
+       </property>
+       <layout class="QHBoxLayout" name="horizontalLayout_16">
+        <item>
+         <widget class="QSlider" name="Sobel_weight_dy_horizontalSlider">
+          <property name="minimum">
+           <number>1</number>
+          </property>
+          <property name="maximum">
+           <number>100</number>
+          </property>
+          <property name="value">
+           <number>50</number>
+          </property>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLCDNumber" name="Sobel_weight_dy_lcdNumber">
+          <property name="intValue" stdset="0">
+           <number>50</number>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+     <widget class="QGroupBox" name="Sobel_weight_dx_groupBox">
+      <property name="geometry">
+       <rect>
+        <x>516</x>
+        <y>12</y>
+        <width>170</width>
+        <height>45</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>Weighting of dx</string>
+      </property>
+      <widget class="QWidget" name="layoutWidget_10">
+       <property name="geometry">
+        <rect>
+         <x>8</x>
+         <y>16</y>
+         <width>156</width>
+         <height>25</height>
+        </rect>
+       </property>
+       <layout class="QHBoxLayout" name="horizontalLayout_17">
+        <item>
+         <widget class="QSlider" name="Sobel_weight_dx_horizontalSlider">
+          <property name="minimum">
+           <number>1</number>
+          </property>
+          <property name="maximum">
+           <number>100</number>
+          </property>
+          <property name="value">
+           <number>100</number>
+          </property>
+          <property name="sliderPosition">
+           <number>100</number>
+          </property>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLCDNumber" name="Sobel_weight_dx_lcdNumber">
+          <property name="smallDecimalPoint">
+           <bool>false</bool>
+          </property>
+          <property name="value" stdset="0">
+           <double>100.000000000000000</double>
+          </property>
+          <property name="intValue" stdset="0">
+           <number>100</number>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </widget>
+    <widget class="QGroupBox" name="Laplacian_box">
+     <property name="geometry">
+      <rect>
+       <x>180</x>
+       <y>20</y>
+       <width>693</width>
+       <height>100</height>
+      </rect>
+     </property>
+     <property name="title">
+      <string>Laplacian</string>
+     </property>
+     <widget class="QGroupBox" name="Laplacian_sub_images_groupBox">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>30</y>
+        <width>170</width>
+        <height>45</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>Number of sub-images</string>
+      </property>
+      <widget class="QWidget" name="layoutWidget_3">
+       <property name="geometry">
+        <rect>
+         <x>4</x>
+         <y>12</y>
+         <width>156</width>
+         <height>25</height>
+        </rect>
+       </property>
+       <layout class="QHBoxLayout" name="horizontalLayout_10">
+        <item>
+         <widget class="QSlider" name="Laplacian_sub_image_horizontalSlider">
+          <property name="minimum">
+           <number>1</number>
+          </property>
+          <property name="maximum">
+           <number>40</number>
+          </property>
+          <property name="value">
+           <number>1</number>
+          </property>
+          <property name="sliderPosition">
+           <number>1</number>
+          </property>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLCDNumber" name="Laplacian_sub_image_cdNumber">
+          <property name="intValue" stdset="0">
+           <number>1</number>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+     <widget class="QGroupBox" name="Laplacian_Histogram">
+      <property name="geometry">
+       <rect>
+        <x>344</x>
+        <y>16</y>
+        <width>170</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>Histogram percentile</string>
+      </property>
+      <widget class="QWidget" name="layoutWidget_11">
+       <property name="geometry">
+        <rect>
+         <x>4</x>
+         <y>12</y>
+         <width>156</width>
+         <height>25</height>
+        </rect>
+       </property>
+       <layout class="QHBoxLayout" name="horizontalLayout_18">
+        <item>
+         <widget class="QSlider" name="Laplacian_histogram_slider">
+          <property name="minimum">
+           <number>40</number>
+          </property>
+          <property name="maximum">
+           <number>99</number>
+          </property>
+          <property name="sliderPosition">
+           <number>70</number>
+          </property>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLCDNumber" name="Laplacian_histogram_lcdNumber">
+          <property name="intValue" stdset="0">
+           <number>70</number>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+     <widget class="QGroupBox" name="Laplacian_Kernel_size_box">
+      <property name="geometry">
+       <rect>
+        <x>344</x>
+        <y>56</y>
+        <width>170</width>
+        <height>37</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>Kernel Size</string>
+      </property>
+      <widget class="QWidget" name="layoutWidget_20">
+       <property name="geometry">
+        <rect>
+         <x>4</x>
+         <y>12</y>
+         <width>156</width>
+         <height>25</height>
+        </rect>
+       </property>
+       <layout class="QHBoxLayout" name="horizontalLayout_27">
+        <item>
+         <widget class="QSlider" name="Laplacian_kernel_slider">
+          <property name="minimum">
+           <number>1</number>
+          </property>
+          <property name="maximum">
+           <number>7</number>
+          </property>
+          <property name="sliderPosition">
+           <number>3</number>
+          </property>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLCDNumber" name="Laplacian_kernel_lcdNumber">
+          <property name="intValue" stdset="0">
+           <number>3</number>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </widget>
+    <widget class="QGroupBox" name="Local_Scharr_box">
+     <property name="geometry">
+      <rect>
+       <x>180</x>
+       <y>20</y>
+       <width>550</width>
+       <height>100</height>
+      </rect>
+     </property>
+     <property name="title">
+      <string> Scharr</string>
+     </property>
+     <widget class="QGroupBox" name="Local_Scharr_Histogram">
+      <property name="geometry">
+       <rect>
+        <x>344</x>
+        <y>12</y>
+        <width>193</width>
+        <height>45</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>Histogram percentile</string>
+      </property>
+      <widget class="QWidget" name="layoutWidget">
+       <property name="geometry">
+        <rect>
+         <x>12</x>
+         <y>13</y>
+         <width>175</width>
+         <height>25</height>
+        </rect>
+       </property>
+       <layout class="QHBoxLayout" name="horizontalLayout_19">
+        <item>
+         <widget class="QCheckBox" name="Scharr_histogram_percentile_checkBox">
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QSlider" name="Local_Scharr_histogram_slider">
+          <property name="minimum">
+           <number>40</number>
+          </property>
+          <property name="maximum">
+           <number>99</number>
+          </property>
+          <property name="sliderPosition">
+           <number>90</number>
+          </property>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLCDNumber" name="Local_Scharr_histogram_lcdNumber">
+          <property name="intValue" stdset="0">
+           <number>90</number>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+     <widget class="QGroupBox" name="groupBox_2">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>12</y>
+        <width>170</width>
+        <height>45</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>Number of sub-images</string>
+      </property>
+      <widget class="QWidget" name="layoutWidget_2">
+       <property name="geometry">
+        <rect>
+         <x>8</x>
+         <y>16</y>
+         <width>156</width>
+         <height>25</height>
+        </rect>
+       </property>
+       <layout class="QHBoxLayout" name="horizontalLayout_4">
+        <item>
+         <widget class="QSlider" name="Local_Scharr_horizontalSlider">
+          <property name="minimum">
+           <number>1</number>
+          </property>
+          <property name="maximum">
+           <number>40</number>
+          </property>
+          <property name="value">
+           <number>5</number>
+          </property>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLCDNumber" name="Local_Scharr_lcdNumber">
+          <property name="intValue" stdset="0">
+           <number>25</number>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+     <widget class="QCheckBox" name="Local_Scharr_dy_checkBox">
+      <property name="geometry">
+       <rect>
+        <x>56</x>
+        <y>68</y>
+        <width>70</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>dy</string>
+      </property>
+      <property name="checked">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QCheckBox" name="Local_Scharr_dx_checkBox">
+      <property name="geometry">
+       <rect>
+        <x>12</x>
+        <y>68</y>
+        <width>70</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>dx</string>
+      </property>
+      <property name="checked">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QGroupBox" name="Scharr_weight_dx_groupBox">
+      <property name="geometry">
+       <rect>
+        <x>170</x>
+        <y>8</y>
+        <width>170</width>
+        <height>45</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>Weighting of dx</string>
+      </property>
+      <widget class="QWidget" name="layoutWidget_6">
+       <property name="geometry">
+        <rect>
+         <x>8</x>
+         <y>16</y>
+         <width>156</width>
+         <height>25</height>
+        </rect>
+       </property>
+       <layout class="QHBoxLayout" name="horizontalLayout_7">
+        <item>
+         <widget class="QSlider" name="Scharr_weight_dx_horizontalSlider">
+          <property name="minimum">
+           <number>1</number>
+          </property>
+          <property name="maximum">
+           <number>100</number>
+          </property>
+          <property name="value">
+           <number>50</number>
+          </property>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLCDNumber" name="Local_Scharr_weight_dx_lcdNumber">
+          <property name="smallDecimalPoint">
+           <bool>false</bool>
+          </property>
+          <property name="value" stdset="0">
+           <double>50.000000000000000</double>
+          </property>
+          <property name="intValue" stdset="0">
+           <number>50</number>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+     <widget class="QGroupBox" name="Scharr_weight_dy_groupBox">
+      <property name="geometry">
+       <rect>
+        <x>170</x>
+        <y>52</y>
+        <width>170</width>
+        <height>45</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>Weighting of dy</string>
+      </property>
+      <widget class="QWidget" name="layoutWidget_7">
+       <property name="geometry">
+        <rect>
+         <x>8</x>
+         <y>16</y>
+         <width>156</width>
+         <height>25</height>
+        </rect>
+       </property>
+       <layout class="QHBoxLayout" name="horizontalLayout_14">
+        <item>
+         <widget class="QSlider" name="Scharr_weight_dy_horizontalSlider">
+          <property name="minimum">
+           <number>1</number>
+          </property>
+          <property name="maximum">
+           <number>100</number>
+          </property>
+          <property name="value">
+           <number>50</number>
+          </property>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLCDNumber" name="Local_Scharr_weight_dy_lcdNumber">
+          <property name="intValue" stdset="0">
+           <number>50</number>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+     <widget class="QGroupBox" name="Scharr_threshold_box">
+      <property name="geometry">
+       <rect>
+        <x>344</x>
+        <y>56</y>
+        <width>193</width>
+        <height>45</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>Edge value threshold</string>
+      </property>
+      <widget class="QWidget" name="layoutWidget">
+       <property name="geometry">
+        <rect>
+         <x>12</x>
+         <y>16</y>
+         <width>175</width>
+         <height>25</height>
+        </rect>
+       </property>
+       <layout class="QHBoxLayout" name="horizontalLayout_5">
+        <item>
+         <widget class="QCheckBox" name="Scharr_threshold_checkBox">
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QSlider" name="Scharr_threshold_slider">
+          <property name="minimum">
+           <number>0</number>
+          </property>
+          <property name="maximum">
+           <number>255</number>
+          </property>
+          <property name="sliderPosition">
+           <number>90</number>
+          </property>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLCDNumber" name="Scharr_threshold_lcdNumber">
+          <property name="intValue" stdset="0">
+           <number>90</number>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </widget>
+   </widget>
+   <widget class="QPushButton" name="Capture_clean_net_pushButton">
+    <property name="geometry">
+     <rect>
+      <x>1140</x>
+      <y>16</y>
+      <width>97</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Capture clean net</string>
+    </property>
+   </widget>
+   <widget class="QGroupBox" name="Input_Source_groupBox">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>201</width>
+      <height>45</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Input Source</string>
+    </property>
+    <widget class="QWidget" name="layoutWidget">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>20</y>
+       <width>182</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout_13">
+      <item>
+       <widget class="QRadioButton" name="Webcam_source_radioButton">
+        <property name="text">
+         <string>WebCam</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="Image_source_radioButton">
+        <property name="text">
+         <string>Image</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="Video_source_radioButton">
+        <property name="text">
+         <string>Video</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="groupBox_3">
+    <property name="geometry">
+     <rect>
+      <x>770</x>
+      <y>50</y>
+      <width>511</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Image enhancement</string>
+    </property>
+    <widget class="QWidget" name="layoutWidget">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>20</y>
+       <width>479</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout_20">
+      <item>
+       <widget class="QCheckBox" name="Gradient_equalizer_checkBox">
+        <property name="text">
+         <string>Light gradient equalizer</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="Morphological_gradient_equalizer_checkBox">
+        <property name="text">
+         <string>Morphological light gradient equalizer</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="Morphological_sharpen_checkBox">
+        <property name="text">
+         <string>Morphological sharpen</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="Growth_box_2">
+    <property name="geometry">
+     <rect>
+      <x>1248</x>
+      <y>4</y>
+      <width>145</width>
+      <height>49</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Growth</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+    <widget class="QPlainTextEdit" name="growth_plainText">
+     <property name="geometry">
+      <rect>
+       <x>4</x>
+       <y>12</y>
+       <width>137</width>
+       <height>53</height>
+      </rect>
+     </property>
+     <property name="verticalScrollBarPolicy">
+      <enum>Qt::ScrollBarAlwaysOff</enum>
+     </property>
+     <property name="horizontalScrollBarPolicy">
+      <enum>Qt::ScrollBarAlwaysOff</enum>
+     </property>
+    </widget>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1463</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="actionPause"/>
+    <addaction name="actionDont_Process"/>
+   </widget>
+   <addaction name="menuFile"/>
+  </widget>
+  <action name="actionPause">
+   <property name="text">
+    <string>Pause</string>
+   </property>
+  </action>
+  <action name="actionDont_Process">
+   <property name="text">
+    <string>Do not Process</string>
+   </property>
+  </action>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>Local_Scharr_histogram_slider</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>Local_Scharr_histogram_lcdNumber</receiver>
+   <slot>display(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>673</x>
+     <y>167</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>825</x>
+     <y>169</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>Local_Sobel_histogram_slider</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>Local_Sobel_histogram_lcdNumber</receiver>
+   <slot>display(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>654</x>
+     <y>272</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>807</x>
+     <y>270</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>Dilation_horizontalSlider</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>Dilation_lcdNumber</receiver>
+   <slot>display(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1015</x>
+     <y>314</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1152</x>
+     <y>316</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>Threshold_slider</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>Threshold_lcdNumber_2</receiver>
+   <slot>display(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>589</x>
+     <y>304</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>663</x>
+     <y>306</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>Local_Sobel_dx_slider</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>Local_Sobel_dx_lcdNumber</receiver>
+   <slot>display(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>535</x>
+     <y>272</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>635</x>
+     <y>270</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>Local_Sobel_dy_slider</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>Local_Sobel_dy_lcdNumber</receiver>
+   <slot>display(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>534</x>
+     <y>312</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>635</x>
+     <y>310</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>Adaptive_Thresholding_C_slider</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>Adaptive_Thresholding_C_lcdNumber</receiver>
+   <slot>display(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>500</x>
+     <y>327</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>529</x>
+     <y>331</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>Scharr_weight_dx_horizontalSlider</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>Local_Scharr_weight_dx_lcdNumber</receiver>
+   <slot>display(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>546</x>
+     <y>166</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>628</x>
+     <y>168</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>Scharr_weight_dy_horizontalSlider</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>Local_Scharr_weight_dy_lcdNumber</receiver>
+   <slot>display(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>544</x>
+     <y>210</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>628</x>
+     <y>212</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>Sobel_weight_dx_horizontalSlider</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>Sobel_weight_dx_lcdNumber</receiver>
+   <slot>display(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>880</x>
+     <y>272</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>983</x>
+     <y>270</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>Sobel_weight_dy_horizontalSlider</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>Sobel_weight_dy_lcdNumber</receiver>
+   <slot>display(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>880</x>
+     <y>316</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>983</x>
+     <y>314</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>Laplacian_histogram_slider</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>Laplacian_histogram_lcdNumber</receiver>
+   <slot>display(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>728</x>
+     <y>272</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>807</x>
+     <y>270</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>Scharr_threshold_slider</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>Scharr_threshold_lcdNumber</receiver>
+   <slot>display(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>754</x>
+     <y>204</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>766</x>
+     <y>204</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

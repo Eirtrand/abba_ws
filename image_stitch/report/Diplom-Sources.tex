@@ -1,0 +1,935 @@
+\text{./asift.cpp}
+\begin{lstlisting}
+#include "compute_asift_keypoints.h"
+#include "compute_asift_matches.h"
+
+#include "opencv2/opencv.hpp"
+#include "asift_opencv.h"
+#include "common.h"
+#include "asift.h"
+
+vector<float> MatToFloatVec(const cv::Mat& mat)  {
+	return vector<float>(mat.begin<uchar>(), mat.end<uchar>());
+}
+
+int asiftDetect(const cv::Mat& image, vector<vector<keypointslist> >& keypoints) {
+	vector<float> image_vec = MatToFloatVec(image);
+	
+	siftPar siftparameters;
+	default_sift_parameters(siftparameters);
+	int num_kp = compute_asift_keypoints(image_vec, image.cols, image.rows, 7, 0, keypoints, siftparameters);
+	return num_kp;
+}
+
+int asiftMatches(vector<vector<keypointslist> >& keypoints1, vector<vector<keypointslist> >& keypoints2, int w1, int h1, int w2, int h2,
+                 matchingslist& matchings, int num_of_tilts1, int num_of_tilts2, const int verb) {
+	siftPar siftparameters;
+	default_sift_parameters(siftparameters);
+	
+	int num_matchings;
+	num_matchings = compute_asift_matches(num_of_tilts1, num_of_tilts2, w1, h1, w2, 
+                                          h2, verb, keypoints1, keypoints2, matchings, siftparameters);
+	return num_matchings;
+	
+}
+
+
+void matchingslist_to_dmatches(const matchingslist matchings, vector<cv::DMatch>& matches, const vector<cv::KeyPoint> trainKps,
+                               const vector<cv::KeyPoint> queryKps) {
+    matches.resize(0);
+    cv::DMatch match;
+    for(unsigned int i = 0; i < matchings.size(); i++) {
+        match.trainIdx = get_index(trainKps, (cv::KeyPoint)AsiftKeyPoint(matchings[i].first));
+        match.queryIdx = get_index(queryKps, (cv::KeyPoint)AsiftKeyPoint(matchings[i].second));
+        matches.push_back(match);
+    }
+}
+
+void conv_keypoint(cv::KeyPoint cv_kp, cv::Mat descriptor, keypoint &res) {
+    res.x = cv_kp.pt.x;
+    res.y = cv_kp.pt.y;
+    res.scale = cv_kp.size;
+    res.angle = cv_kp.angle;
+    
+    int i;
+    for (i = 0; i < min(VecLength, descriptor.cols); i++) {
+        res.vec[i] = (float)descriptor.at<float>(0, i);
+    }
+    for (; i < VecLength; i++) {
+        res.vec[i] = 0;
+    }
+}
+
+vector<vector<keypointslist> > unflatten_kps(const vector<cv::KeyPoint>& keypoints, const cv::Mat& descriptors) {
+    vector<vector<keypointslist> > res(1);
+    res[0].push_back(keypointslist(keypoints.size()));
+    vector<cv::KeyPoint>::const_iterator it;
+    unsigned int i = 0;
+    for (it = keypoints.begin(); it != keypoints.end(); i++, it++) {
+        conv_keypoint(*it, descriptors.row(i) * 255., res[0][0][i]);
+    }
+    return res;
+}
+
+int match_cv_sift_kps(const vector<cv::KeyPoint> & kps1, const vector<cv::KeyPoint>& kps2,
+                      cv::Mat& descriptors1, const cv::Mat& descriptors2,
+                      int w1, int h1, int w2, int h2,
+                      vector<cv::DMatch> &matches) {
+    matchingslist matchings;
+    vector<vector<keypointslist> > keypointslist1 = unflatten_kps(kps1, descriptors1);
+    vector<vector<keypointslist> > keypointslist2 = unflatten_kps(kps2, descriptors2);
+    int num_matches = asiftMatches(keypointslist1, keypointslist2, w1, h1, w2, h2, matchings, 1, 1, 1);
+    matchingslist_to_dmatches(matchings, matches, kps1, kps2);
+    return num_matches;
+}
+\end{lstlisting}
+\text{./asift.h}
+\begin{lstlisting}
+#ifndef ASIFT_H
+#define ASIFT_H
+
+#include "opencv2/opencv.hpp"
+#include "asift_opencv.h"
+
+vector<float> MatToFloatVec(const cv::Mat& mat);
+
+int asiftDetect(const cv::Mat& image, vector<vector<keypointslist> >& keypoints);
+int asiftMatches(vector<vector<keypointslist> >& keypoints1, vector<vector<keypointslist> >& keypoints2, int w1, int h1, int w2, int h2,
+                 matchingslist& matchings, int num_of_tilts1=7, int num_of_tilts2=7, const int verb = 0);
+
+
+
+template<class T> int get_index(vector<T> v, T elem) {
+    typename vector<T>::const_iterator it = v.begin();
+    for (int i = 0; it != v.end(); it++, i++) {
+        if (*it == elem) return i;
+    }
+    assert(false);
+}
+void matchingslist_to_dmatches(const matchingslist matchings, vector<cv::DMatch>& matches, const vector<cv::KeyPoint> trainKps,
+                               const vector<cv::KeyPoint> queryKps);
+
+
+template<class KP> void flatten_kps(vector<vector<keypointslist> >& keys, vector<KP> &res) {
+    res.resize(0);
+    
+    AsiftKeyPoint akp;
+    
+    for (unsigned int i = 0; i < keys.size(); ++i) {
+        for (unsigned int j = 0; j < keys[i].size(); ++j) {
+            for (unsigned int k = 0; k < keys[i][j].size(); ++k) {
+                akp = AsiftKeyPoint(keys[i][j][k]);
+                res.push_back(akp);
+            }
+        }
+    }
+}
+
+
+vector<vector<keypointslist> > unflatten_kps(const vector<cv::KeyPoint>& keypoints, const cv::Mat& descriptors);
+
+int match_cv_sift_kps(const vector<cv::KeyPoint> & kps1, const vector<cv::KeyPoint>& kps2,
+                      cv::Mat& descriptors1, const cv::Mat& descriptors2, int w1, int h1, int w2, int h2,
+                      vector<cv::DMatch> &matches);
+#endif
+\end{lstlisting}
+\text{./asift_opencv.cpp}
+\begin{lstlisting}
+#include "asift_opencv.h"
+#include "asift.h"
+#include "common.h"
+
+AsiftFeatureDetector::AsiftFeatureDetector() {};
+
+AsiftKeyPoint::AsiftKeyPoint(const keypoint& kp): cv::KeyPoint(cv::Point2d(kp.x, kp.y), kp.scale, kp.angle) {
+    setDescriptor(kp.vec);
+};
+
+
+void AsiftFeatureDetector::detectImpl(const cv::Mat& image, vector<cv::KeyPoint>& keypoints,
+                                      const cv::Mat& mask) const {
+    keypoints.resize(5);
+    return ;
+}
+
+
+void AsiftDescriptorExtractor::computeImpl(const cv::Mat& image, vector<cv::KeyPoint>& keypoints,
+                                           cv::Mat& descriptors) const{
+    vector<vector<keypointslist> > keys;
+    int num_kp = asiftDetect(image, keys);
+    AsiftKeyPoint akp;
+    
+    keypoints.resize(0);
+    descriptors.create(num_kp, descriptorSize(), CV_32F);
+    
+    vector<AsiftKeyPoint> akps;
+    flatten_kps<AsiftKeyPoint>(keys, akps);
+    
+    for (int i = 0; i < num_kp; i++) {
+        keypoints.push_back(akps[i]);
+        for (int l = 0; l < descriptorSize(); ++l) {
+            ((float*)descriptors.ptr(i))[l] = akps[i].getDescriptor()[l] / 255.0;
+        }
+    }
+}
+
+int AsiftDescriptorExtractor::descriptorSize() const {
+    return 128;
+}
+
+int AsiftDescriptorExtractor::descriptorType() const {
+    return 0;
+}
+
+
+void AsiftDetectorMatcher::train(const cv::Mat& image) {
+    train_image = image;
+    num_kps = asiftDetect(image, keypoints);
+    flatten_kps<cv::KeyPoint>(keypoints, cv_keypoints);
+}
+vector<cv::KeyPoint>& AsiftDetectorMatcher::getTrainKeypoints() {
+    return cv_keypoints;
+}
+
+
+int AsiftDetectorMatcher::matchImage(const cv::Mat& image, vector<cv::KeyPoint>& other_kps, vector<cv::DMatch>& matches) {
+    vector<vector<keypointslist> > other_keypoints;
+    asiftDetect(image, other_keypoints);
+    flatten_kps<cv::KeyPoint>(other_keypoints, other_kps);
+    matchingslist matchings;
+    int num_matches = asiftMatches(keypoints, other_keypoints, train_image.cols, train_image.rows, image.cols, image.rows, matchings);
+    
+    matchingslist_to_dmatches(matchings, matches, cv_keypoints, other_kps);
+    return num_matches;
+}
+
+\end{lstlisting}
+\text{./asift_opencv.h}
+\begin{lstlisting}
+#ifndef ASIFT_OPENCV_H
+#define ASIFT_OPENCV_H
+#include "opencv2/opencv.hpp"
+#include "demo_lib_sift.h"
+
+#include "detector_matcher.h"
+int match_cv_sift_kps(const vector<cv::KeyPoint>&, const vector<cv::KeyPoint>&,
+                      cv::Mat& descriptors1, const cv::Mat& descriptors2, int w1, int h1, int w2, int h2,
+                      vector<cv::DMatch> &matches);
+
+class AsiftFeatureDetector : public cv::FeatureDetector {
+public:
+    AsiftFeatureDetector();
+    void detectImpl(const cv::Mat& image, vector<cv::KeyPoint>& keypoints,
+                    const cv::Mat& mask=cv::Mat() ) const;
+};
+
+class AsiftDescriptorExtractor : public cv::DescriptorExtractor {
+public:
+    void computeImpl( const cv::Mat& image, vector<cv::KeyPoint>& keypoints,
+                     cv::Mat& descriptors ) const;
+    int descriptorSize() const;
+    int descriptorType() const;
+};
+
+class AsiftDetectorMatcher : public DetectorMatcher {
+public:
+    AsiftDetectorMatcher() {};
+    void train(const cv::Mat&);
+    virtual vector<cv::KeyPoint>& getTrainKeypoints();
+    virtual int matchImage(const cv::Mat&, vector<cv::KeyPoint>&, vector<cv::DMatch>&);
+    virtual ~AsiftDetectorMatcher() {};
+private:
+    cv::Mat train_image;
+    vector<vector<keypointslist> > keypoints;
+    vector<cv::KeyPoint> cv_keypoints;
+    int num_kps;
+};
+
+typedef UsualDetectorMatcher<AsiftFeatureDetector, AsiftDescriptorExtractor> AsiftUsualDetectorMatcher;
+
+class AsiftKeyPoint : public cv::KeyPoint {
+public:
+    AsiftKeyPoint() {};
+    AsiftKeyPoint(const keypoint&);
+    AsiftKeyPoint(cv::Point2d p_, const float& size_, const float& angle_) : cv::KeyPoint(p_, size_, angle_) {};
+    float descriptor[128];
+    float* getDescriptor()  {
+        return descriptor;
+    }
+    void setDescriptor(const float *d) {
+        for (int i = 0; i < 128; ++i) {
+            descriptor[i] = d[i];
+        }
+    }
+};
+#endif // ASIFT_OPENCV_H
+\end{lstlisting}
+\text{./common.cpp}
+\begin{lstlisting}
+#include <cstdio>
+#include "common.h"
+void print_mat(const cv::Mat &mat) {
+    const int t = mat.type();
+    for (int i = 0; i < mat.rows; i++) {
+        for (int j = 0; j < mat.cols; j++) {
+            switch (t) {
+                case CV_32F:
+                    printf("%6.4f ", mat.at<float> (i, j));
+                    break;
+                case CV_64F:
+                    printf("%6.4f ", mat.at<double> (i, j));
+                    break;
+            }
+        }
+        printf("\n");
+    }
+}
+
+bool operator== (const cv::KeyPoint& kp1, const cv::KeyPoint& kp2) {
+    return ((norm(kp1.pt - kp2.pt) < EPS)
+            &&	(abs(kp1.size - kp2.size) < EPS)
+            &&	(abs(kp1.angle - kp2.angle) < EPS));
+}
+
+bool operator!= (const cv::KeyPoint& kp1, const cv::KeyPoint &kp2) {
+    return !(kp1 == kp2);
+}
+
+double scale_ints(const int src_w, const int src_h, 
+                  const int max_w, const int max_h, 
+                  int &res_w, int &res_h){
+    double scale_w, scale_h, scale;
+	scale_w = (double)max_w / src_w;
+	scale_h = (double)max_h / src_h;
+	scale = min(min(scale_w, scale_h), (double)1);
+    
+	res_w = src_w * scale;
+    res_h = src_h * scale;
+	return scale;
+}
+
+double scale_size(const cv::Size &src_size, 
+                  const int max_w, const int max_h,
+                  cv::Size &res_size) {
+    return scale_ints(src_size.width, src_size.height,
+                      max_w, max_h,
+                      res_size.width, res_size.height);
+}
+
+void mean_matr(const vector<cv::Mat>& old_homos, unsigned int last_idx, cv::Mat& res){
+    res.create(3, 3, CV_64F);
+    res.setTo(cv::Scalar(0));
+    unsigned int num_counted = 0, size = old_homos.size();
+    int end_idx;
+    
+    if (last_idx >= size - 1) {
+        end_idx = size;
+    } else {
+        end_idx = last_idx + 1;
+    }
+    
+    
+    for (int i = 0; i < end_idx; i++) {
+        if (cv::sum(cv::abs(old_homos[i]))[0] > EPS) {
+            res += old_homos[i];
+            num_counted ++;
+        }
+    }
+    
+    if (num_counted) {
+        res /= double(num_counted);
+    } else {
+        res = (cv::Mat_<double>(3, 3) << 0, 0, 0, 0, 0, 0, 0, 0, 0);
+    }
+}
+
+\end{lstlisting}
+\text{./common.h}
+\begin{lstlisting}
+#ifndef COMMON_H
+#define COMMON_H
+
+#include "opencv2/opencv.hpp"
+
+#define EPS (1e-4)
+
+void print_mat(const cv::Mat&);
+
+bool operator== (const cv::KeyPoint& kp1, const cv::KeyPoint& kp2);
+
+bool operator!= (const cv::KeyPoint& kp1, const cv::KeyPoint& kp2);
+
+double scale_ints(const int src_w, const int src_h, 
+                  const int max_w, const int max_h, 
+                  int &res_w, int &res_h);
+
+double scale_size(const cv::Size &src_size, 
+                  const int max_h, const int max_w,
+                  cv::Size &res_size);
+
+void mean_matr(const vector<cv::Mat>& old_homos, unsigned int last_idx, cv::Mat& res);
+
+#endif
+\end{lstlisting}
+\text{./detector_matcher.cpp}
+\begin{lstlisting}
+#include "detector_matcher.h"
+#include "asift.h"
+
+
+int SiftDetectorAsiftMatcher::matchImage(const cv::Mat& image, vector<cv::KeyPoint>& other_keypoints, vector<cv::DMatch>& matches) {
+    cv::Mat other_descriptors;
+    detector->detect(image, other_keypoints);
+    extractor->compute(image, other_keypoints, other_descriptors);
+    return match_cv_sift_kps(keypoints, other_keypoints,
+                             descriptors, other_descriptors,
+                             train_image.cols, train_image.rows,
+                             image.cols, image.rows, matches);
+}
+void SiftDetectorAsiftMatcher::train(const cv::Mat& image) {
+    SiftDetectorMatcher::train(image);
+    train_image = image;
+}
+
+int SurfDetectorAsiftMatcher::matchImage(const cv::Mat& image, vector<cv::KeyPoint>& other_keypoints, vector<cv::DMatch>& matches) {
+    cv::Mat other_descriptors;
+    detector->detect(image, other_keypoints);
+    extractor->compute(image, other_keypoints, other_descriptors);
+    return match_cv_sift_kps(keypoints, other_keypoints,
+                             descriptors, other_descriptors,
+                             train_image.cols, train_image.rows,
+                             image.cols, image.rows, matches);
+}
+void SurfDetectorAsiftMatcher::train(const cv::Mat& image) {
+    SurfDetectorMatcher::train(image);
+    train_image = image;
+}
+
+\end{lstlisting}
+\text{./detector_matcher.h}
+\begin{lstlisting}
+#ifndef DETECTOR_MATCHER_H
+#define DETECTOR_MATCHER_H
+#include "opencv2/opencv.hpp"
+
+
+class DetectorMatcher {
+public:
+	DetectorMatcher() {};
+	virtual void train(const cv::Mat&) = 0;
+	virtual vector<cv::KeyPoint>& getTrainKeypoints() = 0;
+	virtual int matchImage(const cv::Mat&, vector<cv::KeyPoint>&, vector<cv::DMatch>&) = 0;
+	virtual ~DetectorMatcher() {};
+};
+
+
+template<class FD, class DE> class UsualDetectorMatcher : public DetectorMatcher {
+public:
+	UsualDetectorMatcher() {
+		detector = new FD();
+		extractor = new DE();
+//        matcher = new cv::BruteForceMatcher< cv::L2<float> >;
+        matcher = new cv::FlannBasedMatcher();
+	}
+	
+	virtual void train(const cv::Mat& image) {	
+		detector->detect(image, keypoints);
+		extractor->compute(image, keypoints, descriptors);	
+        matcher->clear();
+		matcher->add(vector<cv::Mat>(1, descriptors));
+        this->descriptors = descriptors;
+	}
+	
+	virtual vector<cv::KeyPoint>& getTrainKeypoints() {
+		return keypoints;
+	}
+	
+	virtual int matchImage(const cv::Mat& image, vector<cv::KeyPoint>& other_keypoints, vector<cv::DMatch>& matches)  {
+		cv::Mat other_descriptors;
+		detector->detect(image, other_keypoints);
+        extractor->compute(image, other_keypoints, other_descriptors);
+        matcher->match(other_descriptors, matches);
+		return matches.size();
+	}
+    
+	virtual ~UsualDetectorMatcher() {
+		delete detector;
+		delete extractor;
+		delete matcher;
+	}
+    
+    vector<cv::KeyPoint> keypoints;
+protected:
+	cv::FeatureDetector* detector;
+	cv::DescriptorExtractor* extractor;
+	cv::DescriptorMatcher* matcher;
+    cv::Mat descriptors;
+};
+
+typedef UsualDetectorMatcher<cv::SurfFeatureDetector, cv::SurfDescriptorExtractor> SurfDetectorMatcher;
+typedef UsualDetectorMatcher<cv::SiftFeatureDetector, cv::SiftDescriptorExtractor> SiftDetectorMatcher;
+
+
+class SiftDetectorAsiftMatcher : public SiftDetectorMatcher {
+    virtual void train(const cv::Mat& image);
+    virtual int matchImage(const cv::Mat& image, 
+                           vector<cv::KeyPoint>& other_keypoints, 
+                           vector<cv::DMatch>& matches);
+private:
+    cv::Mat train_image;
+};
+
+class SurfDetectorAsiftMatcher : public SurfDetectorMatcher {
+    virtual void train(const cv::Mat& image);
+    virtual int matchImage(const cv::Mat& image, 
+                           vector<cv::KeyPoint>& other_keypoints, 
+                           vector<cv::DMatch>& matches);
+private:
+    cv::Mat train_image;
+};
+
+#endif
+\end{lstlisting}
+\text{./main.cpp}
+\begin{lstlisting}
+//#include <iostream>
+#include <cstring>
+#include <list>
+#include <vector>
+#include <algorithm>
+#include <sys/time.h>
+
+#include "opencv2/opencv.hpp"
+
+#include "asift_opencv.h"
+#include "settings.h"
+#include "common.h"
+
+#define MAX_SIZE_W 320.
+#define MAX_SIZE_H 240.
+#define DRAW_KEYPOINTS
+//#define DRAW_MATCHES
+//#define TRACKING
+#define OUTLIER_RADIUS 15.0
+#define NUM_INPUTS 2
+#define HOMOGRAPHIES_WINDOW_SIZE 10
+
+
+void init_algos(vector<Algorithm>& algos) {
+	algos.resize(0);
+//    algos.push_back(Algorithm("surf", new SurfDetectorMatcher()));
+//    algos.push_back(Algorithm("surf+", new SurfDetectorAsiftMatcher()));
+    algos.push_back(Algorithm("sift", new SiftDetectorMatcher()));
+//    algos.push_back(Algorithm("sift+", new SiftDetectorAsiftMatcher()));
+//    algos.push_back(Algorithm("asift", new AsiftDetectorMatcher()));
+//    algos.push_back(Algorithm("asift-", new AsiftUsualDetectorMatcher()));
+}
+
+void release_algos(vector<Algorithm>& algos) {	
+	vector<Algorithm>::const_iterator it;
+	for (it = algos.begin(); it != algos.end(); ++it) {
+		delete it->dm;
+	}
+	algos.resize(0);
+}
+
+void write_info(cv::Mat img, cv::Point pt, string text) {	
+	putText(img, text, pt, CV_FONT_VECTOR0, 0.4, cv::Scalar(0,0,0), 2);
+	putText(img, text, pt, CV_FONT_VECTOR0, 0.4, cv::Scalar(255,255,255), 1);	
+}
+
+void layout(cv::Mat& outputImage, const cv::Size& src_size, const cv::Size& reference_size,
+            cv::Mat& output_src_image, cv::Mat& output_ref_image, 
+            cv::Mat& output_stitched_img, cv::Mat& output_info_img) {
+    cv::Rect roi;
+    
+    // min size for info
+    cv::Size info(300, 100);
+    
+    cv::Size stitched_size(src_size.width * 2, src_size.height);
+    
+	outputImage.create(cv::Size(src_size.width + stitched_size.width,
+                                max(src_size.height + reference_size.height, stitched_size.height + info.height)),
+					   CV_8UC3);
+	output_src_image = outputImage(cv::Range(0, src_size.height), cv::Range(0, src_size.width));
+	output_ref_image = outputImage(cv::Range(src_size.height, src_size.height + reference_size.height),
+								   cv::Range(0, reference_size.width));
+    
+    roi = cv::Rect(src_size.width, 0, 
+                   stitched_size.width, stitched_size.height);
+    output_stitched_img = outputImage(roi);
+    
+	roi = cv::Rect(src_size.width, stitched_size.height,
+                   stitched_size.width,
+                   src_size.height + reference_size.height - stitched_size.height);
+	output_info_img = outputImage(roi);    
+}
+
+bool try_getting_new_frames(cv::VideoCapture **captures, vector<cv::Mat> &frames,
+                            vector<char> &frame_changed, const vector<double> scales) {
+    cv::Mat tmp_mat;
+    bool any_new = false;
+    
+    unsigned int c = 0;
+    vector<cv::Mat>::iterator f = frames.begin(); 
+    vector<char>::iterator b = frame_changed.begin();
+    
+    for (; c < frames.size(); c++, f++, b++) {
+        captures[c]->operator>>(tmp_mat);
+        
+        if (((*b) = !tmp_mat.empty())) {
+            any_new = true;
+            cv::resize(tmp_mat, (*f), cv::Size(0,0), scales[c], scales[c]);
+        }
+    }
+    return any_new;
+}
+
+
+int main(int argc, char * const argv[]) {
+    vector<cv::Mat> frames(NUM_INPUTS);
+    vector<cv::Mat> homographies(HOMOGRAPHIES_WINDOW_SIZE);
+    cv::Mat prev_frame, grayFrame;
+    vector<cv::Size> frameSizes(frames.size());
+    cv::Size smallFrameSize;
+	timeval lastFrameTime, t2;
+	double time_passed;
+    cv::KeyPoint kp;
+	vector<vector<cv::KeyPoint> > frameKeypoints(frames.size());
+	vector<Algorithm> algos(0);
+	init_algos(algos);
+	DetectorMatcher *dm;
+	InputData *setting;
+    
+	for (vector<Algorithm>::const_iterator algo = algos.begin(); algo != algos.end(); algo++) {
+		setting = new InputData();
+		
+		dm = algo->dm;		
+        
+		vector<cv::DMatch> matches;
+		
+		vector<unsigned int> frameNums(frames.size());
+        
+		ostringstream log_fname;
+		log_fname << "features_log_" << algo->name << ".txt";
+		ofstream log_output(log_fname.str().c_str());		
+        
+        cv::VideoCapture **captures = setting->capture;
+        
+        vector<double> scales(NUM_INPUTS);
+        
+        // get frame resolutions, compute scales
+        for (int c = 0; c < NUM_INPUTS; c++) {
+            cv::Size raw_frame_size, frame_size;
+            raw_frame_size.height = captures[c]->get(CV_CAP_PROP_FRAME_HEIGHT);
+            raw_frame_size.width  = captures[c]->get(CV_CAP_PROP_FRAME_WIDTH);
+            
+            scales[c] = scale_size(raw_frame_size, MAX_SIZE_W, MAX_SIZE_H, frameSizes[c]);
+            
+            cout << "Scaling frames from source " << c << " from ("
+            << raw_frame_size.width << ", " 
+            << raw_frame_size.height << ") to ("
+            << frameSizes[c].width << ", "
+            << frameSizes[c].height << ")." << endl;
+            
+            unsigned int skipFrames = setting->skipFrames[c];
+            cout << "Skipping " << skipFrames << " frames in source " << c << "." << endl;
+            for (frameNums[c] = 0; frameNums[c] < skipFrames; ++frameNums[c]) {
+                if (!captures[c]->grab()) break;
+            }            
+        }		
+		
+		cv::Mat resultFrame(cv::Size(0, 0), CV_8UC3);		
+		cv::Mat outputSrcImg, outputSmallImg, outputReferenceFrame, outputInfoImg, outputStitchedImg;
+        vector<cv::Mat> outputFrames(frames.size());
+		
+        layout(resultFrame, frameSizes[0], frameSizes[1],
+			   outputFrames[0], outputFrames[1],                
+               outputStitchedImg, outputInfoImg);
+		
+        
+        cv::VideoWriter res_video((log_fname.str() + ".avi").c_str(), 
+                                  CV_FOURCC('D', 'I', 'V', 'X'), 15, 
+                                  resultFrame.size());
+        
+		gettimeofday(&lastFrameTime, NULL);
+		
+		cvNamedWindow("Example", CV_WINDOW_AUTOSIZE);
+        
+        ostringstream ostr;
+        	
+#ifdef TRACKING
+        vector<cv::Point2f> window_vec(4);
+        window_vec[0] = cv::Point(100, 0);
+        window_vec[1] = cv::Point(160, 0);
+        window_vec[2] = cv::Point(160, 100);
+        window_vec[3] = cv::Point(100, 100);
+        cv::Mat window(window_vec);
+#endif
+        
+        
+		for (int i = 0; i < 5000; ++i) {
+            vector<char> frame_changed(frames.size());
+            if (!try_getting_new_frames(captures, frames, frame_changed, scales))
+                break;
+            
+            for (unsigned int j = 0; j < frames.size(); j++) {
+                if (frame_changed[j]) {
+                    frameNums[j]++;
+                }
+            }
+            
+            if (setting->match_seq_frames) {    
+                if (i > 0) {
+                    prev_frame.copyTo(frames[1]);
+                    frame_changed[1] = 1;
+                    frameSizes[1] = frameSizes[0];
+                    layout(resultFrame, frameSizes[0], frameSizes[1],
+                           outputFrames[0], outputFrames[1],                
+                           outputStitchedImg, outputInfoImg);
+                }
+                frames[0].copyTo(prev_frame);
+            }
+            
+            if (frame_changed[1]) {
+                cout << "Detecting reference image keypoints and descriptors.. ";
+                dm->train(frames[1]);
+                frameKeypoints[1] = dm->getTrainKeypoints();
+                cout << "done" << endl;
+            } 		
+			//GaussianBlur(frame, frame, Size(3, 3), 0, BORDER_DEFAULT);
+            
+            for (unsigned int j = 0; j < frames.size(); j++) {
+                frames[j].copyTo(outputFrames[j]);                
+            }       
+			//cout << "Drawing reference image" << endl;
+			cvtColor(frames[0], grayFrame, CV_BGR2GRAY);
+			
+			outputInfoImg = cv::Scalar(0, 0, 0);
+			
+			//cout << "Detecting frame keypoints... " << endl;
+			cout << "Detecting image keypoints and descriptors.. " << endl;
+            
+			dm->matchImage(grayFrame, frameKeypoints[0], matches);
+            
+#ifdef DRAW_KEYPOINTS
+            for (unsigned int f = 0; f < frames.size(); f++) {
+                for (unsigned int k = 0; k < frameKeypoints[f].size(); ++k) {
+                    kp = frameKeypoints[f][k];
+                    
+                    circle(outputFrames[f], kp.pt, 1 /*kp.size*/, cvScalar(150, 250, 150), 1);
+                }
+			}
+#endif		
+            
+			cv::Mat new_homography = cv::Mat_<double>(3, 3);
+			
+			vector<int> queryIdxs( matches.size() ),
+			trainIdxs( matches.size() );
+			
+			for( size_t m = 0; m < matches.size(); m++ )
+			{
+				queryIdxs[m] = matches[m].queryIdx;
+				trainIdxs[m] = matches[m].trainIdx;
+			}
+			
+			vector<cv::Point2f> points1; cv::KeyPoint::convert(frameKeypoints[0], points1, queryIdxs);
+			vector<cv::Point2f> points2; cv::KeyPoint::convert(frameKeypoints[1], points2, trainIdxs);
+			if (matches.size() >= 4) {
+				new_homography = cv::findHomography(cv::Mat(points1), cv::Mat(points2), CV_RANSAC, 1);
+			} else {
+				new_homography = (cv::Mat_<double>(3, 3) << 0, 0, 0, 0, 0, 0, 0, 0, 0);
+			}
+			print_mat(new_homography);
+            homographies[i % homographies.size()] = new_homography;
+            
+            cv::Mat homography;
+            mean_matr(homographies, i, homography);
+			unsigned int num_matches = matches.size();
+            
+            
+            warpPerspective(frames[1], outputStitchedImg, homography, outputStitchedImg.size(),
+                            cv::WARP_INVERSE_MAP);
+            
+            cv::Mat stitched_frame_0 = outputStitchedImg(cv::Rect(cv::Point(0,0), frames[0].size()));
+            frames[0].copyTo(stitched_frame_0);
+            
+#ifdef DRAW_MATCHES
+            
+			cv::Mat points1t; perspectiveTransform(cv::Mat(points1), points1t, homography);
+			cv::Scalar color;
+            
+            
+			for( size_t i1 = 0; i1 < points1.size() && num_matches > 0; i1++ )
+			{		
+                if (i1 > 100) break;
+				if(norm(points2[i1] - points1t.at<cv::Point2f>((int)i1,0)) <= OUTLIER_RADIUS ) {// inlier
+					
+					color = cv::Scalar(0, 255, 0);
+					
+					line(resultFrame, 
+                         points1[i1],
+						 cv::Point(points1t.at<cv::Point2f>((int)i1, 0).x,
+                                   points1t.at<cv::Point2f>((int)i1, 0).y + frameSizes[0].height),
+						 color, 1);
+				}
+				else {
+                    num_matches--;
+                    color = cv::Scalar(255, 0, 0);
+                    line(resultFrame, points1[i1],
+                         cv::Point(points2[i1].x, points2[i1].y + frameSizes[0].height),
+                         color, 1);
+				}
+			}
+            
+#endif //DRAW_MATCHES
+            
+#ifdef TRACKING
+            if (i > 10) {
+                cv::Point pts_arr[4];
+                for (unsigned int p = 0; p < 4; p++) {
+                    pts_arr[p] = window.at<cv::Point2f>(p, 0);
+                }
+                const cv::Point* pts = &pts_arr[0];
+                polylines(resultFrame, &pts, &(window.rows), 1, 1, cv::Scalar(255,255,0));
+                cv::Mat new_window;
+                perspectiveTransform(cv::Mat(window), new_window, homography.inv());
+                
+                window = new_window;
+            }
+#endif
+                        
+			gettimeofday(&t2, NULL);
+			time_passed = t2.tv_sec - lastFrameTime.tv_sec;
+			time_passed += (t2.tv_usec - lastFrameTime.tv_usec) / 1000000.0; 
+			
+			//cout << "Time passed " << time_passed << endl;
+			
+			int text_line = 0;
+			
+			ostr.str("");
+			ostr << "Algo: " << algo->name;
+			write_info(outputInfoImg, cv::Point(10, 15 + 10*text_line++), ostr.str());
+			
+			ostr.str("");
+			ostr << "Frame " << frameNums[0];
+			write_info(outputInfoImg, cv::Point(10, 15 + 10*text_line++), ostr.str());
+			
+			ostr.str("");
+			ostr << "FPS: " << (1 / time_passed);		
+			write_info(outputInfoImg, cv::Point(10, 15 + 10*text_line++), ostr.str());
+            
+			ostr.str("");
+			ostr << "Frame 1 keypoints " << frameKeypoints[0].size();
+			write_info(outputInfoImg, cv::Point(10, 15 + 10*text_line++), ostr.str());
+			
+			ostr.str("");
+			ostr << "Frame 2 keypoints " << frameKeypoints[1].size();
+			write_info(outputInfoImg, cv::Point(10, 15 + 10*text_line++), ostr.str());
+                        
+			ostr.str("");
+			ostr << "Matches " << matches.size();
+			write_info(outputInfoImg, cv::Point(10, 15 + 10*text_line++), ostr.str());
+			            
+			ostr.str("");
+			ostr << "Matches after homography " << num_matches;
+			write_info(outputInfoImg, cv::Point(10, 15 + 10*text_line++), ostr.str());
+			
+			log_output << frameKeypoints[1].size() << "\t"
+            << frameKeypoints[0].size() << "\t"
+            << num_matches << "\t"
+            << matches.size() << "\t"
+            << cv::sum(cv::abs(new_homography))[0] << "\t"
+            << cv::sum(cv::abs(homography))[0]
+            << endl;
+			imshow("Example", resultFrame);
+            res_video << resultFrame;
+			gettimeofday(&lastFrameTime, NULL);
+			cvWaitKey(30);
+		}
+		
+		log_output.close();
+		delete setting;
+	}
+	release_algos(algos);
+	cvDestroyWindow("Example1");
+	return 0;
+}
+\end{lstlisting}
+\text{./settings.cpp}
+\begin{lstlisting}
+#include "settings.h"
+#include <cstdlib>
+
+struct InputSetting {
+	string capture_fname;
+	int skip_frames;
+	string reference_fname;
+    int skip_ref_frames;
+    int prev_frame;
+};
+
+InputSetting settings[] = {
+	{DATADIR "/IMG_0007.mp4", 75, DATADIR "/20092010094.jpg", 0, 1},
+	{DATADIR "/IMG_0008.mp4", 360, DATADIR "/27112010097.jpg", 0, 0},
+    {DATADIR "/pisa1.jpg", 0, DATADIR "/pisa2.jpg", 0, 0},
+    {DATADIR "/hryvnas.png", 0, DATADIR "/1_hryvnia_2006_front.png", 0, 0},
+    {DATADIR "/IMG_0014.mp4", 100, DATADIR "/24042011150.jpg", 0, 0},
+    {DATADIR "/24042011152.png", 0, DATADIR "/24042011153.png", 0, 0},
+    {DATADIR "/24042011155.png", 0, DATADIR "/24042011153.png", 0, 0},
+	{"CAM", 0, DATADIR "/1_hryvnia_2006_front.jpg", 0, 0},
+    {DATADIR "/panoram/03052011004.mp4", 170 + 10, DATADIR "/panoram/IMG_0015.mp4", 130 + 10, 0}
+};
+InputSetting setting = settings[8];
+//InputSetting setting = settings[0];
+
+/*InputData::InputData(){
+ InputData(cvCaptureFromFile(setting.capture_fname.c_str()), setting.skip_frames, setting.reference_fname);
+ };*/
+InputData::InputData() {
+    capture = (cv::VideoCapture**) malloc(sizeof(cv::VideoCapture*) * 2);
+    capture[0] = (setting.capture_fname == "CAM" ? new cv::VideoCapture(0) : new cv::VideoCapture(setting.capture_fname.c_str()));
+    capture[1] = new cv::VideoCapture(setting.reference_fname.c_str());
+    skipFrames[0] = setting.skip_frames;
+    skipFrames[1] = setting.skip_ref_frames;
+    match_seq_frames = setting.prev_frame;
+}
+
+
+InputData::~InputData() {
+    delete capture[0];
+    delete capture[1];
+    free(capture);
+    capture = NULL;
+}
+\end{lstlisting}
+\text{./settings.h}
+\begin{lstlisting}
+#ifndef SETTINGS_H
+#define SETTINGS_H
+#include "opencv2/opencv.hpp"
+#include "detector_matcher.h"
+
+#define DATADIR "/Users/xa4a/merc/diploma/dataset/my"
+
+class InputData {
+public:
+	InputData();
+	InputData(cv::VideoCapture c, int s, string ref);
+	~InputData();
+	cv::VideoCapture **capture;
+	int skipFrames[2];
+    int match_seq_frames;
+};
+
+
+class Algorithm {
+public:
+	Algorithm() {};
+    Algorithm(string n, DetectorMatcher *_dm) : name(n), dm(_dm) {};
+	string name;
+	DetectorMatcher *dm;
+};
+
+#endif
+\end{lstlisting}

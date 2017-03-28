@@ -1,0 +1,5 @@
+Convert svo to avi:
+./ZED\ SVO\ Converter -f=/media/ubuntu/memstick/1.svo -v=/media/ubuntu/memstick/1.avi
+
+Start recording: 
+./ZED\ Recorder -f /media/ubuntu/memstick/2.svo
